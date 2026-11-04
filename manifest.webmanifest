@@ -1,0 +1,17 @@
+{
+  "name": "Jugada · entrenador de bolsillo",
+  "short_name": "Jugada",
+  "description": "Cuenta tus repeticiones y califica tu técnica con la cámara del celular. Futbol y tocho bandera.",
+  "lang": "es-MX",
+  "start_url": "./#inicio",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EEF2EC",
+  "theme_color": "#1D6943",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jugada</title>
+<meta name="description" content="Cuenta tus repeticiones y califica tu técnica con la cámara del celular. Futbol y tocho bandera.">
+<meta name="theme-color" content="#1D6943">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Jugada">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- REGISTRO -->
+  <section class="view" id="v-registro" hidden>
+    <div class="onb-hero">
+      <span class="wordmark">Jugada</span>
+      <h1>Tu entrenador de bolsillo</h1>
+      <p>La cámara del celular cuenta tus repeticiones y califica tu técnica. Futbol y tocho bandera.</p>
+    </div>
+    <form id="f-registro" class="stack" novalidate>
+      <label class="fld"><span>Nombre o apodo del jugador</span><input id="r-nombre" type="text" maxlength="24" autocomplete="off" required placeholder="Ej. Santi"><small>Se queda solo en este teléfono.</small></label>
+      <fieldset class="fld"><legend>Deporte</legend>
+        <div class="seg3" role="radiogroup">
+          <label><input type="radio" name="deporte" value="futbol" checked><span>Futbol</span></label>
+          <label><input type="radio" name="deporte" value="tocho"><span>Tocho</span></label>
+          <label><input type="radio" name="deporte" value="ambos"><span>Los dos</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="fld"><legend>Categoría</legend>
+        <div class="seg3" role="radiogroup">
+          <label><input type="radio" name="categoria" value="infantil" checked><span>Hasta 12</span></label>
+          <label><input type="radio" name="categoria" value="juvenil"><span>13 a 17</span></label>
+          <label><input type="radio" name="categoria" value="libre"><span>18 o más</span></label>
+        </div>
+      </fieldset>
+      <label class="fld"><span>Código de tu liga o entrenador <em>(opcional)</em></span><input id="r-codigo" type="text" maxlength="16" autocomplete="off" placeholder="Ej. LIGA-NORTE" style="text-transform:uppercase"></label>
+      <label class="check"><input type="checkbox" id="r-acepto"><span>Soy el jugador y tengo 18 años o más, o soy su madre, padre o tutor. Acepto el <a href="#privacidad">aviso de privacidad</a>: durante el piloto la app envía estadísticas anónimas, nunca nombre ni video.</span></label>
+      <p class="err" id="r-err" role="alert" hidden></p>
+      <button class="btn primary big" type="submit">Empezar a entrenar</button>
+    </form>
+  </section>
+
+  <!-- INICIO -->
+  <section class="view" id="v-inicio" hidden>
+    <header class="top">
+      <div><span class="wordmark sm">Jugada</span><h2 id="i-hola">Hola</h2></div>
+      <span class="pilot">Piloto</span>
+    </header>
+    <div class="week card">
+      <div class="week-txt"><span class="k">Esta semana</span><b id="i-semana">0 de 3 ejercicios</b><small id="i-racha"></small></div>
+      <div class="dots" id="i-dots"></div>
+    </div>
+    <div class="sec-h"><h3>Ejercicios</h3><span class="muted small">Con cámara o con un video de tu galería</span></div>
+    <div class="drills" id="i-drills"></div>
+    <div class="card invite" id="i-encuesta" hidden>
+      <b>¿Medimos también los partidos?</b>
+      <p>Cuatro preguntas para decidir qué construimos después. Toma 1 minuto.</p>
+      <a class="btn" href="#encuesta">Responder</a>
+    </div>
+  </section>
+
+  <!-- EJERCICIO -->
+  <section class="view" id="v-ejercicio" hidden>
+    <header class="top"><a class="back" href="#inicio" aria-label="Volver">←</a><span class="tag" id="e-dep"></span></header>
+    <h2 class="drill-title" id="e-nombre"></h2>
+    <p class="muted" id="e-short"></p>
+    <figure class="setup card"><div id="e-diagrama"></div><figcaption id="e-setup"></figcaption></figure>
+    <div class="opts">
+      <label class="toggle"><input type="checkbox" id="e-frontal"><span>Usar cámara frontal</span></label>
+      <label class="toggle"><input type="checkbox" id="e-sonido" checked><span>Sonido en cada repetición</span></label>
+    </div>
+    <div class="stack">
+      <button class="btn primary big" id="e-camara">Iniciar con la cámara</button>
+      <label class="btn ghost big file-btn">Analizar un video de la galería<input type="file" id="e-video" accept="video/*" hidden></label>
+    </div>
+    <p class="muted small" id="e-pro" hidden>Ejercicio Pro · gratis durante el piloto.</p>
+  </section>
+
+  <!-- EN VIVO -->
+  <section class="view live" id="v-vivo" hidden>
+    <div class="stage" id="stage">
+      <video id="vid" playsinline muted></video>
+      <canvas id="ov"></canvas>
+    </div>
+    <div class="live-top">
+      <button class="x" id="l-cerrar" aria-label="Cancelar">✕</button>
+      <span id="l-nombre"></span>
+      <span class="mono" id="l-tiempo">0:00</span>
+    </div>
+    <div class="live-status" id="l-status">Preparando…</div>
+    <div class="live-bottom">
+      <div class="counter"><b id="l-reps">0</b><span id="l-unidad">repeticiones</span></div>
+      <div class="live-row"><span class="q" id="l-calidad">Calidad —</span><button class="btn stop" id="l-terminar">Terminar</button></div>
+    </div>
+    <div class="countdown" id="l-cuenta" hidden></div>
+    <div class="loading" id="l-carga" hidden><div class="spin"></div><p id="l-carga-txt">Preparando la IA…</p></div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="view" id="v-resultado" hidden>
+    <header class="top"><span class="wordmark sm">Resultado</span><span class="tag" id="s-fecha"></span></header>
+    <div class="res-hero card">
+      <span class="k" id="s-ejercicio"></span>
+      <div class="res-num"><b id="s-reps">0</b><span id="s-unidad"></span></div>
+      <div class="res-meta">
+        <div><span class="k">Tiempo</span><b id="s-tiempo" class="mono"></b></div>
+        <div><span class="k">Ritmo</span><b id="s-ritmo" class="mono"></b></div>
+        <div><span class="k">Calidad</span><b id="s-calidad" class="mono"></b></div>
+      </div>
+    </div>
+    <div class="card"><h3 class="ch">Técnica</h3><div id="s-desglose" class="bars"></div><ul id="s-tips" class="tips"></ul><div id="s-extra" class="extra"></div></div>
+    <div class="card validate">
+      <h3 class="ch">¿Contaste tú también?</h3>
+      <p class="muted small">Si llevaste la cuenta, escríbela. Nos ayuda a medir qué tan preciso es el conteo.</p>
+      <div class="val-row"><input type="number" inputmode="numeric" id="s-humano" min="0" max="999" placeholder="Tu cuenta"><span class="muted small" id="s-precision"></span></div>
+    </div>
+    <div class="stack">
+      <button class="btn primary big" id="s-guardar">Guardar resultado</button>
+      <div class="row2"><button class="btn ghost" id="s-compartir">Compartir</button><button class="btn ghost" id="s-repetir">Repetir</button></div>
+      <button class="link center" id="s-descartar">Descartar</button>
+    </div>
+  </section>
+
+  <!-- PROGRESO -->
+  <section class="view" id="v-progreso" hidden>
+    <header class="top"><h2>Progreso</h2></header>
+    <div class="card"><h3 class="ch">Ejercicios por semana</h3><div id="p-semanas" class="weeks"></div></div>
+    <div class="card"><h3 class="ch">Mejores marcas</h3><div id="p-records" class="records"></div></div>
+    <div class="card"><h3 class="ch">Historial</h3><ul id="p-hist" class="hist"></ul></div>
+  </section>
+
+  <!-- ENCUESTA -->
+  <section class="view" id="v-encuesta" hidden>
+    <header class="top"><a class="back" href="#inicio" aria-label="Volver">←</a><span class="tag">1 minuto</span></header>
+    <h2 class="drill-title">Ayúdanos a decidir</h2>
+    <form id="f-encuesta" class="stack" novalidate>
+      <fieldset class="fld q"><legend>Si grabaras un partido de tu hijo, ¿te gustaría que la app contara sus pases, tiros y recuperaciones?</legend>
+        <div class="seg3"><label><input type="radio" name="b" value="Sí"><span>Sí</span></label><label><input type="radio" name="b" value="Tal vez"><span>Tal vez</span></label><label><input type="radio" name="b" value="No"><span>No</span></label></div></fieldset>
+      <fieldset class="fld q"><legend>Si la liga pusiera una cámara fija y cada jugador tuviera sus estadísticas de cada partido, ¿desbloquearías las de tu hijo?</legend>
+        <div class="seg3"><label><input type="radio" name="c" value="Sí"><span>Sí</span></label><label><input type="radio" name="c" value="Tal vez"><span>Tal vez</span></label><label><input type="radio" name="c" value="No"><span>No</span></label></div></fieldset>
+      <fieldset class="fld q"><legend>¿Cuánto pagarías al mes por medir partidos?</legend>
+        <div class="chips5"><label><input type="radio" name="precio" value="0"><span>Nada</span></label><label><input type="radio" name="precio" value="49"><span>$49</span></label><label><input type="radio" name="precio" value="99"><span>$99</span></label><label><input type="radio" name="precio" value="149"><span>$149</span></label><label><input type="radio" name="precio" value="199"><span>$199+</span></label></div></fieldset>
+      <label class="fld"><span>¿Qué le agregarías a la app? <em>(opcional)</em></span><textarea id="q-comentario" rows="3" maxlength="400"></textarea></label>
+      <p class="err" id="q-err" role="alert" hidden></p>
+      <button class="btn primary big" type="submit">Enviar respuestas</button>
+    </form>
+    <div class="card thanks" id="q-gracias" hidden><b>¡Gracias!</b><p>Tus respuestas ya cuentan para decidir el siguiente paso.</p><a class="btn" href="#inicio">Volver a entrenar</a></div>
+  </section>
+
+  <!-- PERFIL -->
+  <section class="view" id="v-perfil" hidden>
+    <header class="top"><h2>Perfil</h2></header>
+    <form id="f-perfil" class="stack card" novalidate>
+      <label class="fld"><span>Nombre o apodo</span><input id="pf-nombre" type="text" maxlength="24"></label>
+      <label class="fld"><span>Código de liga o entrenador</span><input id="pf-codigo" type="text" maxlength="16" style="text-transform:uppercase"></label>
+      <button class="btn" type="submit">Guardar cambios</button>
+      <p class="ok small" id="pf-ok" hidden>Guardado.</p>
+    </form>
+    <div class="card stack" id="pf-instalar">
+      <h3 class="ch">Instalar en tu celular</h3>
+      <p class="muted small" id="pf-inst-txt">Agrega Jugada a tu pantalla de inicio para abrirla como app.</p>
+      <button class="btn" id="pf-inst-btn" hidden>Instalar Jugada</button>
+    </div>
+    <div class="stack">
+      <a class="btn ghost" href="#privacidad">Aviso de privacidad</a>
+      <button class="btn danger" id="pf-borrar">Borrar mis datos de este teléfono</button>
+      <div class="confirm card" id="pf-confirm" hidden><p>Se borrará el perfil y el historial de este teléfono. No se puede deshacer.</p><div class="row2"><button class="btn danger" id="pf-si">Sí, borrar</button><button class="btn ghost" id="pf-no">Cancelar</button></div></div>
+    </div>
+    <p class="muted small center" id="pf-version"></p>
+  </section>
+
+  <!-- PRIVACIDAD -->
+  <section class="view" id="v-privacidad" hidden>
+    <header class="top"><a class="back" href="#" id="pv-back" aria-label="Volver">←</a></header>
+    <h2 class="drill-title">Aviso de privacidad</h2>
+    <div class="prose" id="pv-texto"></div>
+  </section>
+
+  <nav class="tabs" id="tabs" hidden>
+    <a href="#inicio" data-tab="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5l3.2 2.3-1.2 3.7h-4l-1.2-3.7z" fill="currentColor"/></svg>Entrenar</a>
+    <a href="#progreso" data-tab="progreso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>Progreso</a>
+    <a href="#perfil" data-tab="perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 19.5c1.2-3.4 4-5 7-5s5.8 1.6 7 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Perfil</a>
+  </nav>
+  <div class="toast" id="toast" role="status" hidden></div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
