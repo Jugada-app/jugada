@@ -68,7 +68,7 @@ La primera vez la IA descarga unos 6 MB; después funciona aunque haya mala señ
 
 Agrega `?c=CODIGO` al enlace para saber qué canal trae a cada familia. El código se precarga en el registro y llega a la hoja en la columna `codigo`:
 
-- Link en el perfil de TikTok: `https://tu-sitio.netlify.app/?c=TIKTOK`
+- Link en el perfil de TikTok: `https://jugada-app.github.io/jugada/?c=TIKTOK`
 - Instagram: `?c=INSTAGRAM` · Facebook: `?c=FACEBOOK`
 - Grupo de WhatsApp de una liga: `?c=LIGA-NORTE`
 - Entrenador embajador: `?c=COACH-RAUL`
